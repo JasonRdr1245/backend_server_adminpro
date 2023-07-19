@@ -6,10 +6,6 @@ services:
     image: mongo
     restart: always
     container_name: mongo
-    hostname: host-mongo
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: root
     volumes:
       - ./mongo:/data/db
     ports:

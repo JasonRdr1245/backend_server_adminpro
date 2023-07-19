@@ -2,10 +2,9 @@ const mongoose = require('mongoose');
 
 const dbConnection = async()=>{
     try {
-        mongoose.connect('mongodb://localhost:27017/', {
+        mongoose.connect(process.env.DB_URL, {
             useNewUrlParser: true,
             useUnifiedTopology: true,
-        
         })
         console.log('se logro')
     } catch (error) {

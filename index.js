@@ -1,10 +1,15 @@
+require('dotenv').config();
 const express=require('express');
-const {dbConnection} =require('./database/config')
+const cors=require('cors')
+const {dbConnection} =require('./database/config');
+//conexion a express
 const app=express();
+//cors
+app.use(cors())
 //base de datos
 dbConnection();
 
-
+//rutas
 app.get('/',(req,res)=>{
     res.status(400)
     .json({
@@ -13,6 +18,6 @@ app.get('/',(req,res)=>{
     });
 })
 
-app.listen(3000,()=>{
-    console.log('Servidor corriendo en puerto'+3000)
+app.listen(process.env.PORT,()=>{
+    console.log('Servidor corriendo en puerto '+process.env.PORT)
 })
