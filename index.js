@@ -7,7 +7,7 @@ const app=express();
 //cors
 app.use(cors())
 //base de datos
-dbConnection();
+dbConnection()
 
 //rutas
 app.get('/',(req,res)=>{
