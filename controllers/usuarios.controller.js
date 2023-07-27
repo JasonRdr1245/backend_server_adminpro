@@ -1,19 +1,34 @@
 const {response} = require('express')
-const {validationResult}=require('express-validator')
 const Usuario = require("../models/usuario")
 const encryptation =require('bcryptjs')
 const { generarJWT } = require('../helpers/jwt')
-const getUsuarios=async(req,res)=>{
-    usuarios=await Usuario.find({},'nombre email role google');
+const getUsuarios=async(req,res=response)=>{
+    //const totalRegistros=await Usuario.count()
+    const desde=Number(req.query.desde)||0;
+    const limit=Number(req,query.limit)||5;
     
+
+    //usuarios=await Usuario.find({},'nombre email role google')
+    //        .skip(desde)
+    //        .limit(limit)
+    const [usuarios,totalRegistros]=await Promise.all([
+        Usuario.find({},'nombre email role google img')
+            .skip(desde)
+            .limit(limit),
+
+        Usuario.countDocuments()
+    ])
+    
+
     res.json({
         ok:true,
         usuarios,
-        uid: req.uid
+        uid: req.uid,
+        totalRegistros
     })
 
 }
-const crearUsuario=async(req,res)=>{
+const crearUsuario=async(req,res=response)=>{
     const {email,password}=req.body;
 
     //middleware
@@ -52,7 +67,7 @@ const crearUsuario=async(req,res)=>{
     
 }
 
-const actualizarUsuario =async(req,res)=>{
+const actualizarUsuario =async(req,res=response)=>{
     const uid = req.params.id;
     try{
         
@@ -76,7 +91,6 @@ const actualizarUsuario =async(req,res)=>{
                 campos.email=email;
             }
         }
-        // TODO: validar token y comprobar si es el usuario correcto
 
         
 
@@ -95,7 +109,7 @@ const actualizarUsuario =async(req,res)=>{
     }
 }
 
-const borrarUsuario=async(req,res)=>{
+const borrarUsuario=async(req,res=response)=>{
     uid=req.params.id
     try{
         const usuarioDB=await Usuario.findOne(uid)
