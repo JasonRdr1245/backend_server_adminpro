@@ -6,6 +6,10 @@ const {dbConnection} =require('./database/config');
 const app=express();
 //cors
 app.use(cors())
+
+//carpeta publica
+app.use(express.static('public'))
+
 //base de datos
 dbConnection()
 // Lectura y parseo del body
