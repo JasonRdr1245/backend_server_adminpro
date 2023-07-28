@@ -7,11 +7,8 @@ async function googleVerify(token) {
       // Or, if multiple clients access the backend:
       //[CLIENT_ID_1, CLIENT_ID_2, CLIENT_ID_3]
   });
-  const payload = ticket.getPayload();
-  console.log({payload})
-  return payload
-  // If request specified a G Suite domain:
-  // const domain = payload['hd'];
+  const {email,given_name,family_name,picture} = ticket.getPayload();
+  return {email,given_name,family_name,picture}
 }
 
 module.exports={

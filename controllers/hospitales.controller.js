@@ -1,8 +1,8 @@
-const { response } = require("express")
+const { request,response } = require("express")
 const Hospital=require('../models/hospital')
 
 
-const getHospitales=async(req,res=response)=>{
+const getHospitales=async(req=request,res=response)=>{
     const hospitales=await Hospital.find()
         .populate('usuario','nombre img')
     try{
@@ -43,18 +43,67 @@ const crearHospital=async(req,res)=>{
     
 }
 
-const actualizarHospital=(req,res)=>{
-    res.json({
-        ok:true,
-        msg:'actualizarHospitales'
+const actualizarHospital=async(req=request,res=response)=>{
+
+    const id=req.params.id
+    const uid=req.uid
+    
+
+
+    try {
+        const hospitalDB=await Hospital.findById(id)
+
+        if(!hospitalDB){
+            return res.status(404).json({
+                ok:true,
+                msg:'no se encontro nada con ese id',
+                id
+            })
+        }
+
+
+        const cambiosHospital={
+            ...req.body,
+            usuario:uid
+        }
+
+        const hospitalActualizado=await Hospital.findByIdAndUpdate(id,cambiosHospital,{new:true})
+
+        return res.json({
+            ok:true,
+            hospital:hospitalActualizado
+        })
+    } catch (error) {
+        return res.status(500).json({
+        ok:false,
+        msg:'hable con el adminsitrador'
     })
+    }
+    
 }
 
-const borrarHospital=(req,res)=>{
-    res.json({
+const borrarHospital=async(req=request,res=response)=>{
+    try {
+        const id=req.body.id
+        hospitalDb=findById(id)
+
+        if(!hospitalDB){
+            return res.status(404).json({
+                ok:false,
+                msg:'hospital id no encontrado'
+            })
+        }
+
+        await Hospital.findByIdAndDelete(id)
+
+        res.json({
         ok:true,
-        msg:'borrarHospitales'
-    })
+        msg:'hospital borrado'
+        })
+    } catch (error) {
+        
+    }
+    
 }
 
 module.exports={
